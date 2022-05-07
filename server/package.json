@@ -16,6 +16,11 @@
     "jsonwebtoken": "^8.5.1",
     "knex": "^1.0.4",
     "mysql": "^2.18.1",
-    "nodemon": "^2.0.15"
+    "nodemon": "^2.0.15",
+    "cors": "^2.8.5",
+    "express-session": "^1.17.2",
+    "jsonwebtoken": "^8.5.1",
+    "passport": "^0.5.2",
+    "passport-google-oauth20": "^2.0.0",
   }
 }
