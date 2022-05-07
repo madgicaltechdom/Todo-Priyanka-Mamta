@@ -1,107 +1,74 @@
 
-import React from 'react';
-import './App.css';
-import TodoList from './components/TodoList';
-import Maintodo from './Maintodo';
-import Main from './Main';
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+
+import Navbar from "./components/Navbar";
+import "./App.css";
+import TodoList from "./components/TodoList";
+// import Home from "./pages/Home";
+import { userData } from "./components/userData";
 
 
-function App() {
+import Login from "./pages/Login";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+
+const App = (props) => {
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const getUser = () => {
+      fetch("http://localhost:8000/auth/login/success", {
+        method: "GET",
+        credentials: "include",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Credentials": true,
+        },
+      })
+
+        .then((response) => {
+          if (response.status === 200) return response.json();
+          throw new Error("authentication has been failed!");
+        })
+        .then((resObject) => {
+          setUser(resObject.user);
+          userData.user=resObject.user
+          console.log(resObject.user)
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    
+    };
+    getUser();
+  }, []);
+
+  
+  
+
   return (
     <div>
-      <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Main/>}>
-          <Route path="/" element={<Maintodo/>}>
-
-          </Route>
-
-        </Route>
-      </Routes>
-      </BrowserRouter>
-      {/* <Maintodo/>
-      <Main/> */}
+    <BrowserRouter>
+      <div>
+        <Navbar user={user} />
+        <Routes>
+           <Route path="/" element={<TodoList />} />
+           <Route
+             path="/Login"
+             element={user ? <Navigate to="/" /> : <Login />}
+           />
+        </Routes> 
+      </div>
+      
+    </BrowserRouter>
+    <div>
+      {/* <Home/> */}
+    </div>
     </div>
   );
-}
+};
 
 export default App;
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// import React, { useState ,useEffect} from 'react'
-// import './App.css'
-// import Header from './components/Header';
-// import From from './components/Form';
-// import TodoList from './components/TodoList';
-// const App=()=>{
-//   const initialState=JSON.parse(localStorage.getItem("todos"))||[];
-//   const [input,setInput]=useState("");
-//   const [todos,setTodos]=useState(initialState);
-//   const [editTodo,setEditTodo]=useState(null);
-
-//   useEffect(()=>{
-//     localStorage.setItem("todos",JSON.stringify(todos));
-//   },[todos]);
-//   return(
-    
-//   <div className="container">
-//     <div className="app-wrapper">
-//       <div>
-//         <Header/>
-      
-//       </div>
-//       <div>
-//         <From
-//         input={input}
-//         setInput={setInput}
-//         todos={todos}
-//         setTodos={setTodos}
-//         editTodo={editTodo}
-//         setEditTodo={setEditTodo}
-//         />
-//       </div>
-//       <div>
-//         <TodoList todos={todos} 
-//         setTodos={setTodos}
-//         setEditTodo={setEditTodo}
-//         />
-//       </div>
-
-
-      
-      
-
-      
-//     </div>
-  
-//   </div>
-//   )
-// }
-
-
-// export default App;
